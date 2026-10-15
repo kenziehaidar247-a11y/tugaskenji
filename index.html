@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surat Cinta</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      font-family: Georgia, serif;
+      overflow: hidden;
+    }
+
+    .hint {
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 18px;
+      text-shadow: 0 1px 4px rgba(0,0,0,.3);
+    }
+
+    /* Amplop */
+    .envelope {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      background: #f06b8a;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      transition: transform .3s;
+    }
+    .envelope:hover { transform: scale(1.03); }
+
+    .flap {
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 0;
+      border-left: 150px solid transparent;
+      border-right: 150px solid transparent;
+      border-top: 110px solid #d94f70;
+      transform-origin: top;
+      transition: transform .6s;
+      z-index: 3;
+    }
+
+    .heart-seal {
+      position: absolute;
+      top: 80px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 32px;
+      z-index: 4;
+      transition: opacity .3s;
+    }
+
+    /* Surat */
+    .letter {
+      position: absolute;
+      left: 15px; bottom: 10px;
+      width: 270px;
+      height: 170px;
+      background: #fffaf0;
+      border-radius: 4px;
+      padding: 15px;
+      z-index: 1;
+      transition: transform .8s ease .4s, height .8s ease .4s;
+      overflow: hidden;
+    }
+
+    /* Saat amplop dibuka */
+    .envelope.open .flap { transform: rotateX(180deg); z-index: 0; }
+    .envelope.open .heart-seal { opacity: 0; }
+    .envelope.open .letter {
+      transform: translateY(-100px);
+      height: 340px;
+      z-index: 5;
+    }
+
+    .letter h2 { color: #d94f70; margin-bottom: 8px; font-size: 18px; }
+    .letter p  { font-size: 14px; line-height: 1.6; color: #444; }
+    .letter .from { margin-top: 10px; text-align: right; font-style: italic; color: #d94f70; }
+
+    /* Hati melayang */
+    .floating {
+      position: fixed;
+      bottom: -40px;
+      font-size: 24px;
+      animation: naik 6s linear forwards;
+      pointer-events: none;
+    }
+    @keyframes naik {
+      to { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <p class="hint">💌 Klik amplopnya untuk membuka surat 💌</p>
+
+  <div class="envelope" id="envelope">
+    <div class="flap"></div>
+    <div class="heart-seal">❤️</div>
+    <div class="letter">
+      <h2>Untuk Kamu ❤️</h2>
+      <p id="isi"></p>
+      <p class="from">— Ken</p>
+    </div>
+  </div>
+
+  <script>
+    const envelope = document.getElementById("envelope");
+    const isi = document.getElementById("isi");
+
+    // GANTI ISI SURAT DI SINI
+    const teks =
+      "hai hai,thanks for still being here, for trying ur best, and for not giving up on yourself." +
+      "u’ve come a long way, and honestly, i’m proud of u for making it this far." +
+      "thank u for living, for fighting, and for simply being u. 🤍";
+    let sudahDibuka = false;
+
+    envelope.addEventListener("click", () => {
+      if (sudahDibuka) return;
+      sudahDibuka = true;
+      envelope.classList.add("open");
+
+      // Efek mengetik
+      let i = 0;
+      setTimeout(() => {
+        const ketik = setInterval(() => {
+          isi.textContent += teks[i++];
+          if (i >= teks.length) clearInterval(ketik);
+        }, 50);
+      }, 1000);
+
+      // Hati melayang
+      setInterval(buatHati, 400);
+    });
+
+    function buatHati() {
+      const hati = document.createElement("div");
+      hati.className = "floating";
+      hati.textContent = ["❤️", "💖", "💕", "💗"][Math.floor(Math.random() * 4)];
+      hati.style.left = Math.random() * 100 + "vw";
+      document.body.appendChild(hati);
+      setTimeout(() => hati.remove(), 6000);
+    }
+  </script>
+</body>
+</html>
